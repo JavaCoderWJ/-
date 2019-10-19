@@ -1,4 +1,4 @@
-# Items_share
+# Items_share  2018
 全麦网好物分享平台
 本网站主要实现技术为spring mvc ,spring ,mybatis。
 后端代码放在腾讯云服务器上运行，前端跨域请求后端接口。
