@@ -1,0 +1,42 @@
+@mixin titleNormal($tag: 'h1'){
+	font-weight: 500;
+	@if($tag == 'h1'){
+		font-size: 28px;
+	}
+	@else if($tag == 'h2'){
+		font-size: 24px;
+	}
+	@else{
+		font-size: 20px;
+	}
+}
+@mixin noWrap($line){
+  word-wrap: break-word;
+  text-overflow: ellipsis;
+  text-wrap: nowrap;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $line;
+  overflow: hidden;
+}
+@mixin wordBreak(){
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+}
+@mixin lineNoWrap(){
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+}
+.clearfix{
+	zoom:1;
+	&:after{
+		display:block;
+		clear:both;
+		content:"";
+		visibility:hidden;
+		height:0
+	}
+}
+

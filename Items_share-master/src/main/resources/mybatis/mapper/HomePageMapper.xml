@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="dao.HomePageDao">
+
+    <select id="getNewItems" resultMap="ItemsPojoMapAndUserPojoMap">
+        SELECT 
+        *
+        FROM 
+        items i,user u 
+        WHERE
+        i.user_id =u.user_id 
+        ORDER BY
+        publis_date 
+        DESC 
+        LIMIT 10
+    </select>
+    
+    <select id="getRecommend" resultMap="ItemsPojoMapAndUserPojoMap">
+        SELECT 
+        *
+        FROM 
+        items i,user u 
+        WHERE
+        i.user_id =u.user_id 
+        ORDER BY
+        i.won_praise_for 
+        DESC 
+        LIMIT 10
+    </select>
+   
+    <select id="check_user_name" resultMap="UserPojoMap">
+        SELECT
+        *
+        FROM
+        user
+        WHERE
+        user_name=#{user_name}
+    </select>
+    <select id="getUserPojo" resultMap="UserPojoMap">
+        SELECT
+        *
+        FROM
+        user
+        WHERE
+        user_name=#{user_name} and user_password=#{user_password}
+    </select>
+    <update id="userRegist">
+        insert into 
+        user(user_name,user_password,father_name,mother_name)
+        values(#{user_name},#{user_password},#{father_name},#{mother_name})
+    </update>
+    <select id="findPassword" resultMap="UserPojoMap">
+        select * 
+        from user
+        where user_name=#{user_name} and father_name=#{father_name} and mother_name=#{mother_name}
+    </select>
+     
+    <update id="updatePassword">
+        update user 
+        set user_password=#{new_password}
+        where 
+        user_password=#{user_password} and user_name=#{user_name}
+    </update>
+    
+    <select id="getShufflingItems" resultMap="ItemsPojoMapAndUserPojoMap">
+        SELECT 
+        *
+        FROM 
+        items i,user u 
+        WHERE
+        i.user_id =u.user_id 
+        ORDER BY
+        userful 
+        DESC 
+        LIMIT 5 
+    </select>
+    
+    <select id="getItemsById" resultMap="ItemsPojoMapAndUserPojoMap">
+        SELECT 
+        *
+        FROM 
+        items i,user u 
+        WHERE
+        i.user_id =u.user_id 
+        and 
+        goods_id=#{goods_id}
+       
+    </select>
+    
+    <select id="getItemsByUser" resultMap="ItemsPojoMapAndUserPojoMap">
+       select 
+       *
+       from
+       items i,user u
+       where
+       goods_type=#{goods_type}
+    </select>
+    
+    <select id="getDifferentGoods_type" resultMap="GoodsTypePojoMap">
+       select 
+       *
+       from
+       goods_type_picture
+    </select>
+    
+    <select id="getItemsByGoods_type" resultMap="ItemsPojoMapAndUserPojoMap">
+       select 
+       * 
+       from 
+       items i,user u
+       where 
+       goods_type=#{goods_type}
+    </select>
+    
+    <insert id="insertUserFeedback">
+       insert into
+       user_feedback(user_id,feedback) 
+       values
+       (#{user_id},#{feedback})
+    </insert>
+    
+    <update id="giveLike">
+       UPDATE items i,user u
+       SET u.won_praise_for = u.won_praise_for + 1 
+         , i.won_praise_for=i.won_praise_for+1
+         , u.user_integal=u.user_integal+1
+         , u.user_expericence=u.user_expericence+1
+       WHERE
+	      u.user_id = #{user_id}
+       and i.user_id=#{user_id}
+       and i.goods_id = #{goods_id}
+    </update>
+    
+    <select id="getGoods_type_picture" resultMap="GoodsTypePojoMap">
+       select
+       *
+       from
+       goods_type_picture
+       limit 4
+    </select>
+    
+	<resultMap id="ItemsPojoMapAndUserPojoMap" type="pojo.ItemsPojo">
+		<id property="goods_id" column="goods_id" />
+		<result property="artical_name" column="artical_name" />
+		<result property="article" column="article" />
+		<result property="picture_url" column="picture_url" />
+		<result property="goods_type" column="goods_type" />
+		<result property="publis_date" column="publis_date" />
+		<result property="goods_buy_url" column="goods_buy_url" />
+		<result property="is_original" column="is_original" />
+		<result property="userful" column="userful" />
+		<result property="unuserful" column="unuserful" />
+		<result property="won_praise_for" column="won_praise_for" />
+		<result property="is_reprint" column="is_reprint"/>
+		<association property="userPojo" javaType="pojo.UserPojo">
+		    <id property="user_id" column="user_id"/>
+	        <result property="user_name" column="user_name"/>
+	        <result property="user_password" column="user_password"/>
+	        <result property="father_name" column="father_name"/>
+	        <result property="mother_name" column="mother_name"/>
+	        <result property="user_head" column="user_head"/>
+	        <result property="user_intro" column="user_intro"/>
+	        <result property="fans" column="fans"/>
+	        <result property="won_praise_for" column="won_praise_for"/>
+	        <result property="create_date" column="create_date"/>
+	        <result property="user_integal" column="user_integal"/>
+	        <result property="user_expericence" column="user_expericence"/>
+		</association>
+	</resultMap>
+	
+	<!-- <resultMap id="ItemsPojoMapAndGoodsTypePojoMap" type="pojo.ItemsPojo">
+		<id property="goods_id" column="goods_id" />
+		<result property="artical_name" column="artical_name" />
+		<result property="article" column="article" />
+		<result property="picture_url" column="picture_url" />
+		<result property="goods_type" column="goods_type" />
+		<result property="publis_date" column="publis_date" />
+		<result property="goods_buy_url" column="goods_buy_url" />
+		<result property="is_original" column="is_original" />
+		<result property="userful" column="userful" />
+		<result property="unuserful" column="unuserful" />
+		<result property="won_praise_for" column="won_praise_for" />
+		<association property="goodsTypePicturePojo" javaType="pojo.GoodsTypePojo">
+	        <result property="goods_type" column="goods_type"/>
+	        <result property="goods_type_picture" column="goods_type_picture"/>
+		</association>
+	</resultMap> -->
+	
+	<resultMap type="pojo.UserPojo" id="UserPojoMap">
+	    <id property="user_id" column="user_id"/>
+	    <result property="user_name" column="user_name"/>
+	    <result property="user_password" column="user_password"/>
+	    <result property="father_name" column="father_name"/>
+	    <result property="mother_name" column="mother_name"/>
+	    <result property="user_head" column="user_head"/>
+	    <result property="user_intro" column="user_intro"/>
+	    <result property="fans" column="fans"/>
+	    <result property="won_praise_for" column="won_praise_for"/>
+	    <result property="create_date" column="create_date"/>
+	    <result property="user_integal" column="user_integal"/>
+	    <result property="user_expericence" column="user_expericence"/>
+	</resultMap>
+	
+	<resultMap type="pojo.GoodsTypePojo" id="GoodsTypePojoMap">
+	    <result property="goods_type" column="goods_type"/>
+	    <result property="goods_type_picture" column="goods_type_picture"/>
+	</resultMap>
+	
+	<resultMap type="pojo.FeedbackPojo" id="FeedbackPojoMap">
+	    <id property="user_id" column="user_id"/>
+	    <result property="feedback" column="feedback"/>
+	    <result property="feedback_time" column="feedback_time"/>
+	    <result property="feedback_id" column="feedback_id"/>
+	</resultMap>
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="dao.ArticlePictureDao">
+  
+     <insert id="addPicture">
+        insert into 
+        article_picture(picture_url)
+        values(#{picture_url})
+     </insert>
+     
+     <select id="getArticlePicturePojo" resultMap="ArticlePictureMap">
+        select * 
+        from article_picture
+        where picture_url=#{picture_url}
+     </select>
+     
+     <resultMap type="pojo.ArticlePicturePojo" id="ArticlePictureMap">
+         <id property="picture_id" column="picture_id"/>
+         <result property="picture_url" column="picture_url"/>
+     </resultMap>
+</mapper>

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="dao.PersonalCenterDao">
+    
+    <select id="getPersonalDetails" resultMap="UserPojoMap">
+        select * from user where user_id=#{user_id}
+     </select>
+     
+     <select id="getOriginal" resultMap="ItemsCheckMap">
+        select * from items_check
+        where user_id=#{user_id}
+     </select>
+     
+     <select id="getNotOriginal" resultMap="ItemsPojoMapAndUserPojoMap">
+        select * from items i,user u
+        where u.user_id=#{user_id} and i.is_original=0
+     </select>
+     
+     <select id="getUserPraise" resultMap="ItemsPojoMapAndUserPojoMap">
+         select * from items i,user u
+         where i.user_id=#{user_id} and i.won_praise_for != 0
+     </select>
+     
+     <update id="updatePersonalDetails">
+        UPDATE user
+        set
+          user_name=#{user_name},
+          user_intro=#{user_intro}
+        WHERE user_id=#{user_id}
+     </update>
+     
+     <update id="updatePersonalHead">
+        update user
+        set
+        user_head=#{user_head}
+        where user_id=#{user_id}
+     </update>
+     
+     <update id="updatePassword">
+        update user 
+        set 
+        user_password=#{user_password}
+        where 
+        user_id=#{user_id}
+     </update>
+     
+     <select id="selectPassword" resultMap="UserPojoMap">
+        select * 
+        from user
+        where
+        user_id=#{user_id} and user_password=#{user_password}
+     </select>
+     
+     <select id="getUserComent" resultMap="UserCommentMap">
+        select * 
+        from user_comment
+        where other_user_id=#{user_id}
+     </select>
+     
+     <select id="getUserItemsGoods_id" resultMap="ItemsPojoMapAndUserPojoMap">
+        select *
+        from items i, user u
+        where 
+        i.user_id=#{user_id}
+     </select>
+     
+     <select id="getOtherUserComment" resultMap="UserCommentMap">
+        select *
+        from user_comment
+        where 
+        goods_id=#{goods_id}
+     </select>
+     
+     <select id="getSystemMessage" resultMap="SystemMessageMap">
+        select * 
+        from system_message
+        where user_id=#{user_id}
+     </select>
+     
+     <select id="getUserCollect" resultMap="UserCollectAndItemsMap">
+        select * 
+        from user_collect c,items i,user u 
+        where
+        c.user_id=#{user_id}
+        and c.goods_id=i.goods_id
+     </select>
+     
+      <!-- 我收到的评论 -->
+    <select id="getUserPojo" resultMap="UserPojoMap">
+        select * 
+        from user
+        where user_id=#{user_id}
+    </select>
+    <select id="getUserCommentByCommentID" resultMap="UserCommentMap">
+        select *
+        from user_comment
+        where comment_id=#{comment_id}
+    </select>
+    <select id="getItemsBygoodsID" resultMap="ItemsPojoMapAndUserPojoMap">
+        select *
+        from items
+        where 
+        goods_id=#{goods_id}
+    </select>
+    
+    <resultMap type="pojo.UserPojo" id="UserPojoMap">
+	    <id property="user_id" column="user_id"/>
+	    <result property="user_name" column="user_name"/>
+	    <result property="user_password" column="user_password"/>
+	    <result property="father_name" column="father_name"/>
+	    <result property="mother_name" column="mother_name"/>
+	    <result property="user_head" column="user_head"/>
+	    <result property="user_intro" column="user_intro"/>
+	    <result property="fans" column="fans"/>
+	    <result property="won_praise_for" column="won_praise_for"/>
+	    <result property="create_date" column="create_date"/>
+	    <result property="user_integal" column="user_integal"/>
+	    <result property="user_expericence" column="user_expericence"/>
+	</resultMap>
+	
+	<resultMap type="pojo.UserCommentPojo" id="UserCommentMap">
+	    <id property="comment_id" column="comment_id"/>
+	    <result property="goods_id" column="goods_id"/>
+	    <result property="other_user_id" column="other_user_id"/>
+	    <result property="user_comment" column="user_comment"/>
+	    <result property="comment_date" column="comment_date"/>
+	    <result property="is_author_see" column="is_author_see"/>
+	    <result property="won_praise_for" column="won_praise_for"/>
+	</resultMap>
+	
+	<resultMap type="pojo.SystemMessagePojo" id="SystemMessageMap">
+	    <id property="message_id" column="message_id"/>
+	    <result property="message" column="message"/>
+	    <result property="user_id" column="user_id"/>
+	    <result property="date" column="date"/>
+	</resultMap>
+	
+	<resultMap type="pojo.ItemsCheckPojo" id="ItemsCheckMap">
+	    <result property="user_id" column="user_id"/>
+	    <result property="artical_name" column="artical_name"/>
+	    <result property="article" column="article"/>
+	    <result property="picture_url" column="picture_url"/>
+	    <result property="goods_type" column="goods_type"/>
+	    <result property="publis_date" column="publis_date"/>
+	    <result property="goods_buy_url" column="goods_buy_url"/>
+	    <result property="is_reprint" column="is_reprint"/>
+	    <result property="check_state" column="check_state"/>
+	    <result property="check_id" column="check_id"/>
+	</resultMap>
+	
+	<resultMap id="ItemsPojoMapAndUserPojoMap" type="pojo.ItemsPojo">
+		<id property="goods_id" column="goods_id" />
+		<result property="artical_name" column="artical_name" />
+		<result property="article" column="article" />
+		<result property="picture_url" column="picture_url" />
+		<result property="goods_type" column="goods_type" />
+		<result property="publis_date" column="publis_date" />
+		<result property="goods_buy_url" column="goods_buy_url" />
+		<result property="is_original" column="is_original" />
+		<result property="userful" column="userful" />
+		<result property="unuserful" column="unuserful" />
+		<result property="won_praise_for" column="won_praise_for" />
+		<result property="is_reprint" column="is_reprint"/>
+		<association property="userPojo" javaType="pojo.UserPojo">
+		    <id property="user_id" column="user_id"/>
+	        <result property="user_name" column="user_name"/>
+	        <result property="user_password" column="user_password"/>
+	        <result property="father_name" column="father_name"/>
+	        <result property="mother_name" column="mother_name"/>
+	        <result property="user_head" column="user_head"/>
+	        <result property="user_intro" column="user_intro"/>
+	        <result property="fans" column="fans"/>
+	        <result property="won_praise_for" column="won_praise_for"/>
+	        <result property="create_date" column="create_date"/>
+	        <result property="user_integal" column="user_integal"/>
+	        <result property="user_expericence" column="user_expericence"/>
+		</association>
+	</resultMap>
+	
+	<resultMap type="pojo.UserCollectPojo" id="UserCollectAndItemsMap">
+	     <id property="collect_id" column="collect_id"/>
+	     <result property="collect_time" column="collect_time"/>
+	     <association property="itemsPojo" javaType="pojo.ItemsPojo">
+	         <id property="goods_id" column="goods_id" />
+	      	 <result property="artical_name" column="artical_name" />
+		     <result property="article" column="article" />
+		     <result property="picture_url" column="picture_url" />
+		     <result property="goods_type" column="goods_type" />
+		     <result property="publis_date" column="publis_date" />
+		     <result property="goods_buy_url" column="goods_buy_url" />
+		     <result property="is_original" column="is_original" />
+		     <result property="userful" column="userful" />
+		     <result property="unuserful" column="unuserful" />
+		     <result property="won_praise_for" column="won_praise_for" />
+		     <association property="userPojo" javaType="pojo.UserPojo">
+		         <id property="user_id" column="user_id"/>
+	             <result property="user_name" column="user_name"/>
+	             <result property="user_password" column="user_password"/>
+	             <result property="father_name" column="father_name"/>
+	             <result property="mother_name" column="mother_name"/>
+	             <result property="user_head" column="user_head"/>
+	             <result property="user_intro" column="user_intro"/>
+	             <result property="fans" column="fans"/>
+	             <result property="won_praise_for" column="won_praise_for"/>
+	             <result property="create_date" column="create_date"/>
+	             <result property="user_integal" column="user_integal"/>
+	             <result property="user_expericence" column="user_expericence"/>
+		     </association>
+	     </association>
+	</resultMap>
+
+</mapper>
